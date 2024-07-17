@@ -13,7 +13,41 @@ let topMovies = [
     {
       title: 'Kill Bill',
       author: 'Quentin Tarantino'
-    }
+    },
+    {
+      title: 'Thor: Ragnarok',
+      author: 'Taiki Waititi'
+    },
+    {
+      title: 'Crazy, Stupid, Love',
+      author: 'Glenn Ficarra, John Requa'
+    },
+    {
+      title: 'The Crow',
+      author: 'Alex Proyas'
+    },
+    {
+      title: 'American History X',
+      author: 'Tony Kaye'
+    },
+    {
+      title: 'Back to the Future',
+      author: 'Robert Zemeckis'
+    },
+    {
+      title: 'The Burbs',
+      author: 'Joe Dante'
+    },
+    {
+      title: 'Black Swan',
+      author: 'Darren Aronofsky'
+    },
+
+
+    
+
+    
+
   ];
 
   app.use(morgan('common'));
