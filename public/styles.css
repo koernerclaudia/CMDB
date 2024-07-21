@@ -1,0 +1,111 @@
+:root {
+    --cmdb-background-dark: #3c3b3b;
+    --cmdb-background-table: #292929;
+    --cmdb-petrol: #33b2b9;
+    --cmdb-petrol-light: #8ceaef; 
+    --cmdb-lilac: #eebff1;
+    --text-color: #ffffff;
+    --max-box-width: 1000px;
+    --border-radius: 20px;
+    --radius-button: 15px;
+  
+    --fs-xl: 2.6rem;
+    --fs-lg: 2rem;
+    --fs-m: 1.5rem;
+    --fs-s: 1.1rem;
+    --fs-xs: 0.9rem;}
+  
+  * {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  
+  body {
+    background-color: var(--cmdb-background-dark);
+    color: var(--text-color);
+    font-family: "Inter", sans-serif;
+    font-weight: 100;
+    line-height: 1.4;
+    font-size: var(--fs-s);
+    margin:auto;
+    width: var(--max-box-width);
+  }
+
+  .main_frame {
+    padding:25px;
+  }
+
+  a {
+    color: var(--cmdb-petrol);
+  }
+
+  a:hover {
+    color: var(--text-color);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+    table-layout: auto;
+}
+
+th, td {
+    padding: 20px;
+    text-align: left;
+    vertical-align: top;
+}
+
+td {
+    background-color: var(--cmdb-background-table);
+}
+
+/* Header row styles */
+th {
+    background-color: var(--cmdb-petrol);
+    color: var(--text-color)
+}
+
+/* Table border and row styles */
+table, th, td {
+    border: 1px solid #c1bfbf;
+}
+
+.json-output {
+    color: var(--cmdb-petrol-light);
+    font-weight: 400;
+}
+
+.json-input {
+    color: var(--cmdb-lilac);
+    font-weight: 400;
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+/* Styles for max width 500px */
+@media (max-width: 500px) {
+    th, td {
+        font-size: 12px;
+        padding: 8px;
+    }
+}
+
+/* Styles for min width 500px and max width 800px */
+@media (min-width: 500px) and (max-width: 800px) {
+    th, td {
+        font-size: 14px;
+        padding: 10px;
+    }
+}
+
+/* Styles for min width 801px */
+@media (min-width: 801px) {
+    th, td {
+        font-size: 16px;
+        padding: 12px;
+    }
+}

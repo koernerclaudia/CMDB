@@ -2,13 +2,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CMDB - Documentation</title>
+    <title>cMDb - Documentation</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>"CMDB" - Movie Database API</h1>
+    <main class="main_frame">
+    <h1>"cMDb" - Movie Database API</h1>
     <p>Building a server-side component of a “movies” web application. The web
         application will provide users with access to information about different
         movies, directors, and genres. Users will be able to sign up, update their
         personal information, and create a list of their favorite movies.</p>
-</body>
+        <h2>Endpoints - Movie database</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Your request</th>
+                <th>Endpoint / URL</th>
+                <th>HTTP Method</th>
+                <th>Request body data format</th>
+                <th>Response body data format</th>
+            </tr></thead>
+            <tr>
+                <td>Get a list of all movies in the database</td>
+                <td>/movies</td>
+                <td>GET</td>
+                <td>None</td>
+                <td>A JSON object holding all data of every movie.</td>
+            </tr>
+            <tr>
+                <td>Get a specific movie title</td>
+                <td>/movies/[title]<br><br>
+                    Exampe:<br>
+                    <div class="json-input">/movies/Black%20Swan</div></td>
+                <td>GET</td>
+                <td>None</td>
+                <td>A JSON object holding data  about the movie title containing the title, name of director, birth year of director, genre and genre description.<br><br>
+                    <div class="json-output">"title": "Black Swan",<br>
+                    "director": {<br>
+                    &nbsp;&nbsp;&nbsp;"name": "Darren Aronofsky",<br>
+                    &nbsp;&nbsp;&nbsp;"birth": "1969"<br>
+                                },<br>
+                                "genre": {<br>
+                                    &nbsp;&nbsp;&nbsp;"name": "Thriller",<br>
+                                    &nbsp;&nbsp;&nbsp;"description": "Gives you the chills."
+    }
+</div></td>
+            </tr>
+            <tr>
+                <td>Get a specific genre and its description</td>
+                <td>/movies/genre/[name]<br><br>
+                    Exampe:<br>
+                    <div class="json-input">/movies/genre/Thriller</div></td>
+                <td>GET</td>
+                <td>None</td>
+                <td>A JSON object holding data  about the genre title and its description.<br><br><div class="json-output">
+                    {<br>"name": "Thriller",<br>
+                    "description": "Gives you the chills.<br>}</div></td>
+            </tr>
+            <tr>
+                <td>Get information on the director</td>
+                <td>/movies/directors/[name]<br><br>
+                    Exampe:<br>
+                    <div class="json-input">/movies/directors/Steven%20Spielberg</div></td>
+                <td>GET</td>
+                <td>None</td>
+                <td>A JSON object holding data  about the director's name and his year of birth.<br><br><div class="json-output">
+                    {<br>"name": "Steven Spielberg",<br>
+                    "birth": "1946"<br>}</div></td>
+            </tr>
+        </table>
+        <h2>Endpoints - User Details</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>User request</th>
+                <th>Endpoint / URL</th>
+                <th>HTTP Method</th>
+                <th>Request body data format</th>
+                <th>Response body data format</th>
+            </tr></thead>
+            <tr>
+                <td>Create a new user</td>
+                <td>/users</td>
+                <td>POST</td>
+                <td>A JSON object holding data  about the user's name and a placeholder for their favourite movies, structured like this<br><br><div class="json-input">
+                    {<br>"name": "Marie",<br>
+                    "favMovies": "[ ]"<br>}</div></td>
+               <td>A JSON object holding data  about the user that has been added, a placeholder for their favourite movie(s), as well as an assigned ID.<br><br><div class="json-output">
+                    {<br>"name": "Marie",<br>
+                    "favMovies": "[ ]",<br>
+                    "id": "8a9d8fcf-d43a-4ea2-bb90-6fe3efcc3050"<br>}</div></td>
+            </tr>
+            <tr>
+                <td>Change/ Update the name of a user</td>
+                <td>/users/[id]<br><br>
+                Exampe:<br>
+                <div class="json-input">/users/2</div></td>
+                <td>PUT</td>
+                <td>A JSON object with the updated name of the user, structured like this<br><br><div class="json-input">
+                    {<br>"name": "Thomas"<br>}</div></td>
+                <td>A JSON file showing the user information with the newly updated name, including the user ID and their favourite movies.<div class="json-output">
+                    {<br>"name": "Thomas",<br>
+                    "favMovies": "Interstellar",<br>
+                    "id": "2"<br>}</div></td>
+            </tr>
+            <tr>
+                <td>Let the user add a movie to their favourites</td>
+                <td>/users/[ID]/[movieTitle]<br><br>
+                    Exampe:<br>
+                    <div class="json-input">/users/2/Black%20Swan</div></td>
+                <td>POST</td>
+                <td>A JSON file containing the object key for favourite movies and the value left empty.<br><br><div class="json-input">
+                    {<br>
+                    "favMovies": [ ],<br>
+                    }</div></td>
+                <td>A text file returning a statement to confirm the change has been made, such as:<br><br>
+                    <div class="json-output">Black Swan has been <span class="underline">added</span> to the user 1's array.</div></td>
+            </tr>
+            <tr>
+                <td>Let the user delete a movie from their favourites </td>
+                <td>/users/[ID]/[movieTitle]<br><br>
+                    Exampe:<br>
+                    <div class="json-input">/users/2/Black%20Swan</div></td>
+                <td>DELETE</td>
+                <td>A JSON file containing the object key for favourite movies and the value left empty.<br><br><div class="json-input">
+                    {<br>
+                    "favMovies": [ ],<br>
+                    }</div></td>
+                    <td>A text file returning a statement to confirm the change has been made, such as:<br><br>
+                        <div class="json-output">Black Swan has been <span class="underline">removed</span> from the user 1's array.</div></td>
+            </tr>
+        </table>
+    </main></body>
 </html>
