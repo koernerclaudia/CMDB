@@ -23,45 +23,59 @@
                 <th>Response body data format</th>
             </tr></thead>
             <tr>
-                <td>Get a list of all movies in the database</td>
+                <td>Return a list of ALL movies to the user</td>
                 <td>/movies</td>
                 <td>GET</td>
                 <td>None</td>
-                <td>A JSON object holding all data of every movie.</td>
+                <td>A JSON object holding all data of every movie including information about the director and genre.</td>
             </tr>
             <tr>
-                <td>Get a specific movie title</td>
-                <td>/movies/[title]<br><br>
+                <td>Return data about a single movie by title to the user</td>
+                <td>/movies/:Title<br><br>
                     Exampe:<br>
                     <div class="json-input">/movies/Black%20Swan</div></td>
                 <td>GET</td>
                 <td>None</td>
                 <td>A JSON object holding data  about the movie title containing the title, name of director, birth year of director, genre and genre description.<br><br>
-                    <div class="json-output">"title": "Black Swan",<br>
-                    "director": {<br>
-                    &nbsp;&nbsp;&nbsp;"name": "Darren Aronofsky",<br>
-                    &nbsp;&nbsp;&nbsp;"birth": "1969"<br>
-                                },<br>
-                                "genre": {<br>
-                                    &nbsp;&nbsp;&nbsp;"name": "Thriller",<br>
-                                    &nbsp;&nbsp;&nbsp;"description": "Gives you the chills."
-    }
+                    <div class="json-output">{
+                        "Title": "Black Swan",<br>
+                        "Genre": {<br>
+                            &nbsp;&nbsp;    "Type": "Thriller",<br>
+                            &nbsp;&nbsp;    "Description": "Gives you the chills."<br>
+                        },<br>
+                        "Director": {<br>
+                            &nbsp;&nbsp;    "Name": "Darren Aronofsky",<br>
+                            &nbsp;&nbsp;    "Birthyear": "1969"<br>
+                        },<br>
+                       
+                        "Description": "A ballerina's role in a New York City ballet creates a consuming obsession that leads to her psychological unraveling",<br>
+                        
+                        "Actors": [<br>
+                        &nbsp;    "Natalie Portman",<br>
+                        &nbsp;    "Mila Kunis"<br>
+                        ],<br>
+                        "ImageURL": "",<br>
+                        "Featured": true,<br>
+                        "_id": "66a374b384a37c5b1b60c5c8",<br>
+                    }
 </div></td>
             </tr>
             <tr>
-                <td>Get a specific genre and its description</td>
-                <td>/movies/genre/[name]<br><br>
+                <td>Return data about a genre</td>
+                <td>/movies/genres/:genreType<br><br>
                     Exampe:<br>
-                    <div class="json-input">/movies/genre/Thriller</div></td>
+                    <div class="json-input">/movies/genres/RomCom</div></td>
                 <td>GET</td>
                 <td>None</td>
                 <td>A JSON object holding data  about the genre title and its description.<br><br><div class="json-output">
-                    {<br>"name": "Thriller",<br>
-                    "description": "Gives you the chills.<br>}</div></td>
+                    {<br>
+                        "Type": "RomCom",<br>
+                        "Description": "Romantic and Comedic."<br>
+                    }</div></td>
             </tr>
             <tr>
-                <td>Get information on the director</td>
-                <td>/movies/directors/[name]<br><br>
+                <td>Return data about a director by name</td>
+                <td>/movies/directors/:directorName<br><br>
                     Exampe:<br>
                     <div class="json-input">/movies/directors/Steven%20Spielberg</div></td>
                 <td>GET</td>
@@ -71,7 +85,7 @@
                     "birth": "1946"<br>}</div></td>
             </tr>
         </table>
-        <h2>Endpoints - User Details</h2>
+        <h2>Endpoints - User Details &amp; Actions</h2>
         <table>
             <thead>
             <tr>
@@ -82,55 +96,111 @@
                 <th>Response body data format</th>
             </tr></thead>
             <tr>
-                <td>Create a new user</td>
+                <td>Allow a user to register</td>
                 <td>/users</td>
                 <td>POST</td>
-                <td>A JSON object holding data  about the user's name and a placeholder for their favourite movies, structured like this<br><br><div class="json-input">
-                    {<br>"name": "Marie",<br>
-                    "favMovies": "[ ]"<br>}</div></td>
+                <td>A JSON object holding data  about the user's username, password and email address - these 3 fields are required. The user can also add their date of birth.<br><br>Example here:<br><div class="json-input">
+                    {<br>
+                        "username": "tony-stark",<br>
+                        "password": "ironman2024!",<br>
+                        "email": "tony.stark@starkindustries.com"<br>
+                      }</div></td>
                <td>A JSON object holding data  about the user that has been added, a placeholder for their favourite movie(s), as well as an assigned ID.<br><br><div class="json-output">
-                    {<br>"name": "Marie",<br>
-                    "favMovies": "[ ]",<br>
+                {<br>
+                    "username": "tony-stark",<br>
+                    "password": "ironman2024!",<br>
+                    "email": "tony.stark@starkindustries.com"<br>
+                    "FavoriteMovies": "[ ]",<br>
                     "id": "8a9d8fcf-d43a-4ea2-bb90-6fe3efcc3050"<br>}</div></td>
             </tr>
             <tr>
-                <td>Change/ Update the name of a user</td>
-                <td>/users/[id]<br><br>
+                <td>Check a user by username</td>
+                <td>/users/:username<br><br>
                 Exampe:<br>
-                <div class="json-input">/users/2</div></td>
+                <div class="json-input">/users/tony-stark</div></td>
+                <td>GET</td>
+                <td>None</td>
+                <td>A JSON file showing all of that user's information, including the user ID and their favourite movies.<div class="json-output">
+                    {<br>
+                        "username": "tony-stark",<br>
+                        "password": "ironman2024!",<br>
+                        "email": "tony.stark@starkindustries.com"<br>
+                        "FavoriteMovies": "[ ]",<br>
+                        "id": "8a9d8fcf-d43a-4ea2-bb90-6fe3efcc3050"<br>}</div></td>
+            </tr>
+            <tr>
+                <td>Allow a user to update their details</td>
+                <td>/users/:username<br><br>
+                Exampe:<br>
+                <div class="json-input">users/peter-spidey</div></td>
                 <td>PUT</td>
-                <td>A JSON object with the updated name of the user, structured like this<br><br><div class="json-input">
-                    {<br>"name": "Thomas"<br>}</div></td>
-                <td>A JSON file showing the user information with the newly updated name, including the user ID and their favourite movies.<div class="json-output">
-                    {<br>"name": "Thomas",<br>
-                    "favMovies": "Interstellar",<br>
-                    "id": "2"<br>}</div></td>
+                <td>A JSON object including all the variables have been defined as being required. Only one of the variables can be changed, the others can stay the same.<br><br><div class="json-input">
+                    {<br>
+                        "username": "peter-parker",<br>
+                        "password": "spiderpig-345",<br>
+                        "email": "peter-parker@web.com"<br>
+                    }</div></td>
+                <td>A JSON file showing the user information with the newly updated information, including all other information about that user.<div class="json-output">
+                    {<br>
+                        "_id": "66a388da84a37c5b1b60c5cd",<br>
+                        "userid": 1,<br>
+                        "username": "peter-parker",<br>
+                        "password": "spiderpig-345",<br>
+                        "email": "peter-parker@web.com",<br>
+                        "Birthdate": "2002-01-12T00:00:00.000Z",<br>
+                        "FavoriteMovies": [<br>
+                            "66a374b384a37c5b1b60c5cc"<br>
+                        ]
+                    }</div></td>
             </tr>
             <tr>
                 <td>Let the user add a movie to their favourites</td>
-                <td>/users/[ID]/[movieTitle]<br><br>
+                <td>/users/:username/movies/:MovieID<br><br>
                     Exampe:<br>
-                    <div class="json-input">/users/2/Black%20Swan</div></td>
+                    <div class="json-input">/users/tony-stark/movies/66a374b384a37c5b1b60c5c1</div></td>
                 <td>POST</td>
-                <td>A JSON file containing the object key for favourite movies and the value left empty.<br><br><div class="json-input">
-                    {<br>
-                    "favMovies": [ ],<br>
+                <td>None</td>
+                <td>A JSON file returning the user's information with the MovieID added from their FavouriteMovies.<br><br>
+                    <div class="json-output">{<br>
+                        "_id": "66a69c7bcee5ab14621d26cd",<br>
+                        "username": "tony-stark",<br>
+                        "password": "ironman2024!",<br>
+                        "email": "tony.stark@starkindustries.com",<br>
+                        "FavoriteMovies": [<br>
+                            "66a374b384a37c5b1b60c5c9",<br>
+                            "66a374b384a37c5b1b60c5c1"<br>
+                        ],<br>
+                        "__v": 0<br>
                     }</div></td>
-                <td>A text file returning a statement to confirm the change has been made, such as:<br><br>
-                    <div class="json-output">Black Swan has been <span class="underline">added</span> to the user 1's array.</div></td>
             </tr>
             <tr>
                 <td>Let the user delete a movie from their favourites </td>
-                <td>/users/[ID]/[movieTitle]<br><br>
+                <td>/users/:username/movies/:MovieID<br><br>
                     Exampe:<br>
-                    <div class="json-input">/users/2/Black%20Swan</div></td>
+                    <div class="json-input">/users/tony-stark/movies/66a374b384a37c5b1b60c5c1</div></td>
                 <td>DELETE</td>
-                <td>A JSON file containing the object key for favourite movies and the value left empty.<br><br><div class="json-input">
-                    {<br>
-                    "favMovies": [ ],<br>
-                    }</div></td>
-                    <td>A text file returning a statement to confirm the change has been made, such as:<br><br>
-                        <div class="json-output">Black Swan has been <span class="underline">removed</span> from the user 1's array.</div></td>
+                <td>None</td>
+                    <td>A JSON file returning the user's information with the MovieID deleted from their FavouriteMovies.<br><br>
+                        <div class="json-output">{<br>
+                            "_id": "66a69c7bcee5ab14621d26cd",<br>
+                            "username": "tony-stark",<br>
+                            "password": "ironman2024!",<br>
+                            "email": "tony.stark@starkindustries.com",<br>
+                            "FavoriteMovies": [<br>
+                                "66a374b384a37c5b1b60c5c9",<br>
+                            ],<br>
+                            "__v": 0<br>
+                        }</div></td>
+            </tr>
+            <tr>
+                <td>Allow a user to deregister</td>
+                <td>/users/:username<br><br>
+                    Exampe:<br>
+                    <div class="json-input">/users/tony-stark/</div></td>
+                <td>DELETE</td>
+                <td>None</td>
+                    <td>A text file returning a statement that the user has been deleted. If the user was already deleted, the return statement says that the user does not exist.<br><br>
+                        <div class="json-output">The User "tony-stark" has been deleted.<br><br>The User "tony-stark" could not be found.</div></td>
             </tr>
         </table>
     </main></body>
