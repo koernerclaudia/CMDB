@@ -1,0 +1,89 @@
+[
+  {
+    _id: ObjectId('66a388da84a37c5b1b60c5cf'),
+    userid: 3,
+    username: 'natasha-romanoff',
+    password: 'blackwidow!67',
+    email: 'black.widow@shield.gov',
+    Birthdate: ISODate('1984-11-22T00:00:00.000Z'),
+    FavoriteMovies: []
+  },
+  {
+    _id: ObjectId('66a388da84a37c5b1b60c5d0'),
+    userid: 4,
+    username: 'steve-rogers',
+    password: 'capshield22',
+    email: 'steve.rogers@aol.com',
+    Birthdate: ISODate('1918-07-04T00:00:00.000Z'),
+    FavoriteMovies: []
+  },
+  {
+    _id: ObjectId('66a388da84a37c5b1b60c5d1'),
+    userid: 5,
+    username: 'thor',
+    password: 'thunderGod89',
+    email: 'thor@asgard.com',
+    Birthdate: ISODate('0965-01-01T00:00:00.000Z'),
+    FavoriteMovies: []
+  },
+  {
+    _id: ObjectId('66a388da84a37c5b1b60c5d2'),
+    userid: 6,
+    username: 'bruce-hulk',
+    password: 'gammaRay123',
+    email: 'bruce.banner@sciencespace.org',
+    Birthdate: ISODate('1969-12-18T00:00:00.000Z'),
+    FavoriteMovies: [ ObjectId('66a374b384a37c5b1b60c5cc') ]
+  },
+  {
+    _id: ObjectId('66a388da84a37c5b1b60c5d4'),
+    userid: 8,
+    username: 'clint-barton',
+    password: 'hawkeye44',
+    email: 'clint.barton@avengers.org',
+    Birthdate: ISODate('1981-01-07T00:00:00.000Z'),
+    FavoriteMovies: []
+  },
+  {
+    _id: ObjectId('66a388da84a37c5b1b60c5d5'),
+    userid: 9,
+    username: 'peter-quill',
+    password: 'starLord2024',
+    email: 'peter.quill@guardians.com',
+    Birthdate: ISODate('1980-03-22T00:00:00.000Z'),
+    FavoriteMovies: []
+  },
+  {
+    _id: ObjectId('66a388da84a37c5b1b60c5d6'),
+    userid: 10,
+    username: 'matt-murdock',
+    password: 'daredevil007',
+    email: 'matt.murdock@lawfirm.com',
+    Birthdate: ISODate('1985-03-14T00:00:00.000Z'),
+    FavoriteMovies: []
+  },
+  {
+    _id: ObjectId('66a6a3dbcee5ab14621d26d9'),
+    username: 'tony-stark',
+    password: 'ironman2024!',
+    email: 'tony.stark@starkindustries.com',
+    FavoriteMovies: [],
+    __v: 0
+  },
+  {
+    _id: ObjectId('66a96249d45d3077abfa4aee'),
+    username: 'claudia',
+    password: 'cmdb2024',
+    email: 'claudia.koerner@gmail.com',
+    FavoriteMovies: [],
+    __v: 0
+  },
+  {
+    _id: ObjectId('66a9658146888e706aecd258'),
+    username: 'arthurcurry',
+    password: 'aquaman2024!',
+    email: 'arthurcurry@atlant.is',
+    FavoriteMovies: [],
+    __v: 0
+  }
+]
