@@ -5,16 +5,18 @@ const { check, validationResult } = require('express-validator');
 const Movies = Models.Movie;
 const Users = Models.User;
 
-mongoose.connect('mongodb://localhost:27017/cmdb', {
-  serverSelectionTimeoutMS: 10000, // Timeout after 10s instead of 30s
-  socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
-  connectTimeoutMS: 30000, // Give up initial connection after 30 seconds
-  bufferCommands: false, // Disable Mongoose buffering
-}).then(() => {
-  console.log('Connected to MongoDB');
-}).catch(err => {
-  console.error('Error connecting to MongoDB:', err.message);
-});
+mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+
+// mongoose.connect('mongodb://localhost:27017/cmdb', {
+//   serverSelectionTimeoutMS: 10000, // Timeout after 10s instead of 30s
+//   socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+//   connectTimeoutMS: 30000, // Give up initial connection after 30 seconds
+//   bufferCommands: false, // Disable Mongoose buffering
+// }).then(() => {
+//   console.log('Connected to MongoDB');
+// }).catch(err => {
+//   console.error('Error connecting to MongoDB:', err.message);
+// });
 
 const express = require('express');
 const app = express();
