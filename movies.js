@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Models = require('./models.js');
-const { check, validationResult } = require('express-validator');
 
 const Movies = Models.Movie;
 const Users = Models.User;
@@ -18,6 +17,9 @@ mongoose.connect(process.env.CONNECTION_URI);
 //   console.error('Error connecting to MongoDB:', err.message);
 // });
 
+const { check, validationResult } = require('express-validator');
+check('username', 'Username contains non-alphanumeric characters - not allowed.').isAlphanumeric()
+
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -28,6 +30,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const cors = require('cors');
 let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
+
 
 app.use(cors({
   origin: (origin, callback) => {
@@ -50,50 +53,52 @@ require('./passport');
 //Add a user
 
 
-app.post('/users', 
-check('username', 'Username is required').isLength({min: 5}),
-check('username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
-check('password', 'Password is required').not().isEmpty(),
-check('email', 'Email does not appear to be valid').isEmail(),
-// Validation logic here for request
+app.post('/users',
+  // Validation logic here for request
   //you can either use a chain of methods like .not().isEmpty()
   //which means "opposite of isEmpty" in plain english "is not empty"
   //or use .isLength({min: 5}) which means
   //minimum value of 5 characters are only allowed
-async (req, res) => {
+  [
+    check('Username', 'Username is required').isLength({min: 5}),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail()
+  ], async (req, res) => {
 
-  let errors = validationResult(req);
+  // check the validation object for errors
+    let errors = validationResult(req);
 
-  if (!errors.isEmpty()) {
-    return res.status(422).json({ errors: errors.array() });
-  }
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
 
-  let hashedPassword = Users.hashPassword(req.body.Password);
-  await Users.findOne({ username: req.body.username }) // Search to see if a user with the requested username already exists
-    .then((user) => {
-      if (user) {
-      //If the user is found, send a response that it already exists
-        return res.status(400).send(req.body.username + ' already exists');
-      } else {
-        Users
-          .create({
-            username: req.body.username,
-            password: hashedPassword,
-            email: req.body.email,
-            Birthday: req.body.Birthday
-          })
-          .then((user) => { res.status(201).json(user) })
-          .catch((error) => {
-            console.error(error);
-            res.status(500).send('Error: ' + error);
-          });
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).send('Error: ' + error);
-    });
-});
+    let hashedPassword = Users.hashPassword(req.body.Password);
+    await Users.findOne({ Username: req.body.Username }) // Search to see if a user with the requested username already exists
+      .then((user) => {
+        if (user) {
+          //If the user is found, send a response that it already exists
+          return res.status(400).send(req.body.username + ' already exists');
+        } else {
+          Users
+            .create({
+              username: req.body.username,
+              password: hashedPassword,
+              email: req.body.Email,
+              Birthday: req.body.Birthday
+            })
+            .then((user) => { res.status(201).json(user) })
+            .catch((error) => {
+              console.error(error);
+              res.status(500).send('Error: ' + error);
+            });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send('Error: ' + error);
+      });
+  });
 
 // Get all users
 app.get('/users', passport.authenticate('jwt', { session: false }), async (req, res) => {
