@@ -26,9 +26,15 @@ let movieSchema = mongoose.Schema({
     FavoriteMovies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Movie' }]
   });
   
-  userSchema.statics.hashPassword = (password) => {
-    return bcrypt.hashSync(password, 10);
-  };
+  // userSchema.statics.hashPassword = (password) => {
+  //   return bcrypt.hashSync(password, 10);
+  // };
+
+  userSchema.statics.hashPassword = function(password) {
+    const saltRounds = 10; // or however many rounds you want
+    const salt = bcrypt.genSaltSync(saltRounds);
+    return bcrypt.hashSync(password, salt);
+};
   
   userSchema.methods.validatePassword = function(password) {
     return bcrypt.compareSync(password, this.password);
@@ -39,3 +45,6 @@ let movieSchema = mongoose.Schema({
   
   module.exports.Movie = Movie;
   module.exports.User = User;
+
+
+  
