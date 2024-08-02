@@ -4,6 +4,7 @@ const Models = require('./models.js');
 const Movies = Models.Movie;
 const Users = Models.User;
 
+// Connection through Heroku
 mongoose.connect(process.env.CONNECTION_URI);
 
 // mongoose.connect('mongodb://localhost:27017/cmdb', {

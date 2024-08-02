@@ -30,11 +30,6 @@ let movieSchema = mongoose.Schema({
     return bcrypt.hashSync(password, 10);
   };
 
-//   userSchema.statics.hashPassword = function(password) {
-//     const saltRounds = 10; // or however many rounds you want
-//     const salt = bcrypt.genSaltSync(saltRounds);
-//     return bcrypt.hashSync(password, salt);
-// };
   
   userSchema.methods.validatePassword = function(password) {
     return bcrypt.compareSync(password, this.password);
