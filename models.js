@@ -19,22 +19,22 @@ let movieSchema = mongoose.Schema({
   });
   
   let userSchema = mongoose.Schema({
-    Username: {type: String, required: true},
-    Password: {type: String, required: true},
-    Email: {type: String, required: true},
+    username: {type: String, required: true},
+    password: {type: String, required: true},
+    email: {type: String, required: true},
     Birthday: Date,
     FavoriteMovies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Movie' }]
   });
   
-  // userSchema.statics.hashPassword = (password) => {
-  //   return bcrypt.hashSync(password, 10);
-  // };
+  userSchema.statics.hashPassword = (password) => {
+    return bcrypt.hashSync(password, 10);
+  };
 
-  userSchema.statics.hashPassword = function(password) {
-    const saltRounds = 10; // or however many rounds you want
-    const salt = bcrypt.genSaltSync(saltRounds);
-    return bcrypt.hashSync(password, salt);
-};
+//   userSchema.statics.hashPassword = function(password) {
+//     const saltRounds = 10; // or however many rounds you want
+//     const salt = bcrypt.genSaltSync(saltRounds);
+//     return bcrypt.hashSync(password, salt);
+// };
   
   userSchema.methods.validatePassword = function(password) {
     return bcrypt.compareSync(password, this.password);

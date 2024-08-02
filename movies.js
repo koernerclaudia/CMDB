@@ -29,7 +29,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const cors = require('cors');
-let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
+let allowedOrigins = ['http://localhost:8088', 'http://testsite.com','http://localhost:8088',];
 
 
 app.use(cors({
@@ -60,10 +60,10 @@ app.post('/users',
   //or use .isLength({min: 5}) which means
   //minimum value of 5 characters are only allowed
   [
-    check('Username', 'Username is required').isLength({min: 5}),
-    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
-    check('Password', 'Password is required').not().isEmpty(),
-    check('Email', 'Email does not appear to be valid').isEmail()
+    check('username', 'Username is required').isLength({min: 5}),
+    check('username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('password', 'Password is required').not().isEmpty(),
+    check('email', 'Email does not appear to be valid').isEmail()
   ], async (req, res) => {
 
   // check the validation object for errors
@@ -73,8 +73,8 @@ app.post('/users',
       return res.status(422).json({ errors: errors.array() });
     }
 
-    let hashedPassword = Users.hashPassword(req.body.Password);
-    await Users.findOne({ Username: req.body.Username }) // Search to see if a user with the requested username already exists
+    let hashedPassword = Users.hashPassword(req.body.password);
+    await Users.findOne({ Username: req.body.username }) // Search to see if a user with the requested username already exists
       .then((user) => {
         if (user) {
           //If the user is found, send a response that it already exists
@@ -85,7 +85,7 @@ app.post('/users',
               username: req.body.username,
               password: hashedPassword,
               email: req.body.Email,
-              Birthday: req.body.Birthday
+              Birthdate: req.body.Birthdate
             })
             .then((user) => { res.status(201).json(user) })
             .catch((error) => {
@@ -144,7 +144,7 @@ app.put('/users/:username', passport.authenticate('jwt', { session: false }), as
           username: req.body.username,
           password: req.body.password,
           email: req.body.email,
-          Birthday: req.body.Birthday
+          Birthdate: req.body.Birthdate
       }
   },
       { new: true }) // This line makes sure that the updated document is returned
