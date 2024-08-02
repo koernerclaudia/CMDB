@@ -31,17 +31,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const cors = require('cors');
 let allowedOrigins = ['http://localhost:8088', 'http://testsite.com','http://localhost:8088',];
 
+// Below code is to restrict access from particular origins / websites.
+// app.use(cors({
+//   origin: (origin, callback) => {
+//     if(!origin) return callback(null, true);
+//     if(allowedOrigins.indexOf(origin) === -1){ // If a specific origin isn’t found on the list of allowed origins
+//       let message = 'The CORS policy for this application doesn’t allow access from origin ' + origin;
+//       return callback(new Error(message ), false);
+//     }
+//     return callback(null, true);
+//   }
+// }));
 
-app.use(cors({
-  origin: (origin, callback) => {
-    if(!origin) return callback(null, true);
-    if(allowedOrigins.indexOf(origin) === -1){ // If a specific origin isn’t found on the list of allowed origins
-      let message = 'The CORS policy for this application doesn’t allow access from origin ' + origin;
-      return callback(new Error(message ), false);
-    }
-    return callback(null, true);
-  }
-}));
+// Allow access from all origins.
+app.use(cors());
 
 let auth = require('./auth')(app);
 
@@ -51,8 +54,6 @@ require('./passport');
 // USER BASED ACTIONS
 
 //Add a user
-
-
 app.post('/users',
   // Validation logic here for request
   //you can either use a chain of methods like .not().isEmpty()
