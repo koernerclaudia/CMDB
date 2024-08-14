@@ -19,7 +19,6 @@ mongoose.connect(process.env.CONNECTION_URI);
 // });
 
 const { check, validationResult } = require('express-validator');
-check('username', 'Username contains non-alphanumeric characters - not allowed.').isAlphanumeric()
 
 const express = require('express');
 const app = express();
@@ -56,15 +55,11 @@ require('./passport');
 
 //Add a user
 app.post('/users',
-  // Validation logic here for request
-  //you can either use a chain of methods like .not().isEmpty()
-  //which means "opposite of isEmpty" in plain english "is not empty"
-  //or use .isLength({min: 5}) which means
-  //minimum value of 5 characters are only allowed
   [
     check('username', 'Username is required').isLength({min: 5}),
     check('username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
     check('password', 'Password is required').not().isEmpty(),
+    check('password', 'Password must be at least 8 characters long').isLength({ min: 8 }),
     check('email', 'Email does not appear to be valid').isEmail()
   ], async (req, res) => {
 
