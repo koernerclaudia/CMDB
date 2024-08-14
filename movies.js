@@ -213,13 +213,25 @@ app.delete('/users/:username', passport.authenticate('jwt', { session: false }),
     try {
       let query = {};
   
-      // If a genre is provided in the query string, filter by genre
+      // Check if the genre exists in any movie's Genre.Type
       if (genreType) {
+        const genreExists = await Movies.exists({ 'Genre.Type': genreType });
+  
+        if (!genreExists) {
+          return res.status(404).send(`Error: The genre "${genreType}" was not found. Please check the spelling and try again. The genre might also not be part of this database.`);
+        }
+  
         query['Genre.Type'] = genreType;
       }
   
-      // If an actor is provided in the query string, filter by actor
+      // Check if the actor exists in any movie's Actors array
       if (actorName) {
+        const actorExists = await Movies.exists({ 'Actors': actorName });
+  
+        if (!actorExists) {
+          return res.status(404).send(`Error: The actor "${actorName}" was not found. Please check the spelling and try again. If the name is indeed correct, they might not actually appear in the respective movie as a main actor or are listed in this database.`);
+        }
+  
         query['Actors'] = actorName;
       }
   
@@ -231,6 +243,7 @@ app.delete('/users/:username', passport.authenticate('jwt', { session: false }),
       res.status(500).send('Error: ' + err);
     }
   });
+  
   
   
 
