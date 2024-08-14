@@ -304,28 +304,6 @@ app.get('/movies/directors/:directorName', passport.authenticate('jwt', { sessio
   }
 });
 
-// Swagger Documentation
-
-const swaggerJsdoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
-
-const swaggerOptions = {
-  swaggerDefinition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'API Documentation',
-      version: '1.0.0',
-    },
-  },
-  apis: ['./routes/*.js'], // Path to the API docs
-};
-
-const swaggerDocs = swaggerJsdoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
-
-app.listen(3000, () => console.log('Server started on port 3000'));
-
-
 app.use(express.static('public'));
 
     // listen for requests
