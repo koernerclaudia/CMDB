@@ -204,17 +204,23 @@ app.delete('/users/:username', passport.authenticate('jwt', { session: false }),
 
   // ACTIONS WITH MOVIE DATABASE
 
-  // Return a list of ALL movies to the user
+  // Return a list of ALL movies to the user, list movies by genre, list movies by actor
 
   app.get('/movies', passport.authenticate('jwt', { session: false }), async (req, res) => {
     const genreType = req.query.genre; // Retrieve the genre from query parameters
+    const actorName = req.query.actor; // Retrieve the actor from query parameters
     
     try {
       let query = {};
   
       // If a genre is provided in the query string, filter by genre
       if (genreType) {
-        query = { 'Genre.Type': genreType };
+        query['Genre.Type'] = genreType;
+      }
+  
+      // If an actor is provided in the query string, filter by actor
+      if (actorName) {
+        query['Actors'] = actorName;
       }
   
       const movies = await Movies.find(query);
@@ -225,6 +231,7 @@ app.delete('/users/:username', passport.authenticate('jwt', { session: false }),
       res.status(500).send('Error: ' + err);
     }
   });
+  
   
 
  // Get a specific movie by title and list all its information
