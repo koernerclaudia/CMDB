@@ -200,6 +200,8 @@ app.delete('/users/:username', passport.authenticate('jwt', { session: false }),
         console.error(err);
         res.status(500).send('Error: ' + err);
       });
+
+      
   });
 
   // ACTIONS WITH MOVIE DATABASE
@@ -229,7 +231,7 @@ app.delete('/users/:username', passport.authenticate('jwt', { session: false }),
         const actorExists = await Movies.exists({ 'Actors': actorName });
   
         if (!actorExists) {
-          return res.status(404).send(`Error: The actor "${actorName}" was not found. Please check the spelling and try again. If the name is indeed correct, they might not actually appear in the respective movie as a main actor or are listed in this database.`);
+          return res.status(404).send(`Error: The actor "${actorName}" was not found. Please check the spelling and try again. If the name is indeed correct, they might not actually appear as main actor in the movies listed in this database.`);
         }
   
         query['Actors'] = actorName;
@@ -301,6 +303,28 @@ app.get('/movies/directors/:directorName', passport.authenticate('jwt', { sessio
       res.status(500).send('Error: ' + err);
   }
 });
+
+// Swagger Documentation
+
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+
+const swaggerOptions = {
+  swaggerDefinition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'API Documentation',
+      version: '1.0.0',
+    },
+  },
+  apis: ['./routes/*.js'], // Path to the API docs
+};
+
+const swaggerDocs = swaggerJsdoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+app.listen(3000, () => console.log('Server started on port 3000'));
+
 
 app.use(express.static('public'));
 
