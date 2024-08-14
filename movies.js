@@ -206,16 +206,26 @@ app.delete('/users/:username', passport.authenticate('jwt', { session: false }),
 
   // Return a list of ALL movies to the user
 
-app.get('/movies', passport.authenticate('jwt', { session: false }), async (req, res) => {
-    await Movies.find()
-      .then((movies) => {
-        res.status(201).json(movies);
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
-      });
+  app.get('/movies', passport.authenticate('jwt', { session: false }), async (req, res) => {
+    const genreType = req.query.genre; // Retrieve the genre from query parameters
+    
+    try {
+      let query = {};
+  
+      // If a genre is provided in the query string, filter by genre
+      if (genreType) {
+        query = { 'Genre.Type': genreType };
+      }
+  
+      const movies = await Movies.find(query);
+  
+      res.status(200).json(movies);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    }
   });
+  
 
  // Get a specific movie by title and list all its information
 
