@@ -5,7 +5,7 @@ https://cmdb-b8f3cd58963f.herokuapp.com/documentation.html
 
 ## Purpose
 
-This is my version of a backend of a movie database; set up during my Full Stack Web Dev Training with [CareerFoundry](https://careerfoundry.com/en/courses/become-a-web-developer/). 
+This is my version of a backend of a movie database; set up during my Full Stack Web Dev Training with [CareerFoundry](https://careerfoundry.com/en/courses/become-a-web-developer/){:target="_blank"}. 
 The project is built on the MERN Stack -> MongoDB, Express, React & Node.js.
 
 The project is supposed to demonstrate full-stack JavaScript development, including APIs (REST), web server
@@ -15,7 +15,7 @@ This project consists of 2 parts:
 
 PART1 = Backend built with MongoDB, Express & Node.js.
 
-PART2 = Frontend built with React - [Check it out here](https://github.com/koernerclaudia/CMDB-Live)
+PART2 = Frontend built with React - [Check it out here](https://github.com/koernerclaudia/CMDB-Live){:target="_blank"}
 
 ## Built & Technologies
 
