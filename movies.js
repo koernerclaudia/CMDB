@@ -7,20 +7,12 @@ const Users = Models.User;
 // Connection through Heroku
 mongoose.connect(process.env.CONNECTION_URI);
 
-// mongoose.connect('mongodb://localhost:27017/cmdb', {
-//   serverSelectionTimeoutMS: 10000, // Timeout after 10s instead of 30s
-//   socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
-//   connectTimeoutMS: 30000, // Give up initial connection after 30 seconds
-//   bufferCommands: false, // Disable Mongoose buffering
-// }).then(() => {
-//   console.log('Connected to MongoDB');
-// }).catch(err => {
-//   console.error('Error connecting to MongoDB:', err.message);
-// });
-
 const { check, validationResult } = require('express-validator');
 
 const express = require('express');
+const morgan = require('morgan');
+const fs = require('fs'); // import built in node modules fs and path 
+const path = require('path');
 const app = express();
 const bodyParser = require('body-parser');
 const uuid = require('uuid');
@@ -28,20 +20,14 @@ const uuid = require('uuid');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {flags: 'a'})
+
+// setup the logger
+app.use(morgan('combined', {stream: accessLogStream}));
+
+
 const cors = require('cors');
 let allowedOrigins = ['http://localhost:8088', 'http://testsite.com','http://localhost:8088',];
-
-// Below code is to restrict access from particular origins / websites.
-// app.use(cors({
-//   origin: (origin, callback) => {
-//     if(!origin) return callback(null, true);
-//     if(allowedOrigins.indexOf(origin) === -1){ // If a specific origin isn’t found on the list of allowed origins
-//       let message = 'The CORS policy for this application doesn’t allow access from origin ' + origin;
-//       return callback(new Error(message ), false);
-//     }
-//     return callback(null, true);
-//   }
-// }));
 
 // Allow access from all origins.
 app.use(cors());
