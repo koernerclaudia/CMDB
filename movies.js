@@ -10,21 +10,12 @@ mongoose.connect(process.env.CONNECTION_URI);
 const { check, validationResult } = require('express-validator');
 
 const express = require('express');
-const morgan = require('morgan');
-const fs = require('fs'); // import built in node modules fs and path 
-const path = require('path');
 const app = express();
 const bodyParser = require('body-parser');
 const uuid = require('uuid');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), {flags: 'a'})
-
-// setup the logger
-app.use(morgan('combined', {stream: accessLogStream}));
-
 
 const cors = require('cors');
 let allowedOrigins = ['http://localhost:8088', 'http://testsite.com','http://localhost:8088',];
