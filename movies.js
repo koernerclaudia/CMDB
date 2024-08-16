@@ -185,7 +185,7 @@ app.delete('/users/:username', passport.authenticate('jwt', { session: false }),
 
   // Return a list of ALL movies to the user, list movies by genre, list movies by actor
 
-  app.get('/movies', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  app.get('/movies', async (req, res) => {
     const genreType = req.query.genre; // Retrieve the genre from query parameters
     const actorName = req.query.actor; // Retrieve the actor from query parameters
     
