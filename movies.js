@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const cors = require('cors');
-let allowedOrigins = ['http://localhost:8088', 'http://testsite.com','http://localhost:8088',];
+let allowedOrigins = ['http://localhost:8088', 'http://testsite.com','http://localhost:8088', 'https://cmdb2024.netlify.app'];
 
 // Allow access from all origins.
 app.use(cors());
