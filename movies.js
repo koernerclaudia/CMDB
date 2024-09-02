@@ -104,54 +104,94 @@ app.get('/users/:username', passport.authenticate('jwt', { session: false }), as
   }
 });
 
-// Update a user's info, by username
+// Update a user's info, by username (updating username, password, email)
 
-app.put(
-  '/users/:Username',
-  passport.authenticate('jwt', { session: false }),
+app.put('/users/:Username',
   [
+    // Validate the input fields
     check('username', 'Username is required').isLength({ min: 5 }),
-    check(
-      'username',
-      'username contains non alphanumeric characters - not allowed.'
-    ).isAlphanumeric(),
-    check('password', 'Password is required').not().isEmpty(),
-    check('email', 'Email does not appear to be valid').isEmail(),
-  ],
-  async (req, res) => {
-    // check the validation object for errors
+    check('username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('password', 'Password is required').optional().not().isEmpty(),
+    check('email', 'Email does not appear to be valid').optional().isEmail(),
+    check('Birthday', 'Birthday does not appear to be valid').optional().isDate()
+  ], async (req, res) => {
+
+  // check the validation object for errors
     let errors = validationResult(req);
 
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
-    // CONDITION TO CHECK ADDED HERE
-    if (req.user.username !== req.params.username) {
-      return res.status(400).send('Permission denied');
+
+    // Hash the password if it's being updated
+    let updatedUser = req.body;
+    if (updatedUser.password) {
+      updatedUser.password = Users.hashPassword(updatedUser.password);
     }
-    // CONDITION ENDS
-    let hashedPassword = Users.hashPassword(req.body.password);
+
     await Users.findOneAndUpdate(
-      { Username: req.params.username },
-      {
-        $set: {
-          username: req.body.username,
-          password: hashedPassword,
-          email: req.body.email,
-          Birthday: req.body.Birthday,
-        },
-      },
-      { new: true }
-    ) // This line makes sure that the updated document is returned
+      { username: req.params.username },
+      { $set: updatedUser },
+      { new: true }) // This option returns the updated document
       .then((updatedUser) => {
+        if (!updatedUser) {
+          return res.status(404).send('Error: No user was found');
+        }
         res.json(updatedUser);
       })
-      .catch((err) => {
-        console.log(err);
-        res.status(500).send('Error: ' + err);
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send('Error: ' + error);
       });
-  }
-);
+  });
+
+
+// app.put(
+//   '/users/:Username',
+//   passport.authenticate('jwt', { session: false }),
+//   [
+//     check('username', 'Username is required').isLength({ min: 5 }),
+//     check(
+//       'username',
+//       'username contains non alphanumeric characters - not allowed.'
+//     ).isAlphanumeric(),
+//     check('password', 'Password is required').not().isEmpty(),
+//     check('email', 'Email does not appear to be valid').isEmail(),
+//   ],
+//   async (req, res) => {
+//     // check the validation object for errors
+//     let errors = validationResult(req);
+
+//     if (!errors.isEmpty()) {
+//       return res.status(422).json({ errors: errors.array() });
+//     }
+//     // CONDITION TO CHECK ADDED HERE
+//     if (req.user.username !== req.params.username) {
+//       return res.status(400).send('Permission denied');
+//     }
+//     // CONDITION ENDS
+//     let hashedPassword = Users.hashPassword(req.body.password);
+//     await Users.findOneAndUpdate(
+//       { Username: req.params.username },
+//       {
+//         $set: {
+//           username: req.body.username,
+//           password: hashedPassword,
+//           email: req.body.email,
+//           Birthday: req.body.Birthday,
+//         },
+//       },
+//       { new: true }
+//     ) // This line makes sure that the updated document is returned
+//       .then((updatedUser) => {
+//         res.json(updatedUser);
+//       })
+//       .catch((err) => {
+//         console.log(err);
+//         res.status(500).send('Error: ' + err);
+//       });
+//   }
+// );
 
 
 // app.put('/users/:username', passport.authenticate('jwt', { session: false }),
