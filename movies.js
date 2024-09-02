@@ -106,7 +106,16 @@ app.get('/users/:username', passport.authenticate('jwt', { session: false }), as
 
 // Update a user's info, by username
 
-app.put('/users/:username', passport.authenticate('jwt', { session: false }), async (req, res) => {
+app.put('/users/:username', passport.authenticate('jwt', { session: false }),
+[
+  check('username', 'Username is required').isLength({min: 5}),
+  check('username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+  check('password', 'Password is required').not().isEmpty(),
+  check('password', 'Password must be at least 8 characters long').isLength({ min: 8 }),
+  check('email', 'Email does not appear to be valid').isEmail()
+],
+
+async (req, res) => {
   // CONDITION TO CHECK ADDED HERE
   if(req.user.username !== req.params.username){
       return res.status(400).send('Permission denied');
