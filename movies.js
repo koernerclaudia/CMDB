@@ -106,7 +106,12 @@ app.get('/users/:username', passport.authenticate('jwt', { session: false }), as
 
 // Update a user's info, by username (updating username and/or password and/or email)
 
-app.put('/users/:username', async (req, res) => {
+app.put('/users/:username', passport.authenticate('jwt', {session: false}), async (req, res) => {
+  
+  if(req.user.username !==req.params.username){
+    return res.status(400).send('Permission denied');
+  }
+  
   await Users.findOneAndUpdate({ username: req.params.username }, { $set:
     {
       username: req.body.username,
