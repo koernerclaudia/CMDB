@@ -125,16 +125,17 @@ async (req, res) => {
     return res.status(400).send('Permission denied');
   }
 
-  let updateData = {
-    username: req.body.username,
-    password: req.body.password,
-    email: req.body.email,
-    Birthday: req.body.Birthday
-  };
+  let updateData = {};
 
-  // Only hash the password if it's being updated
-  if (req.body.password) {
-    updateData.password = Users.hashPassword(req.body.password);
+  // Only include fields that are present in the request body
+  if (req.body.username) updateData.username = req.body.username;
+  if (req.body.password) updateData.password = Users.hashPassword(req.body.password);
+  if (req.body.email) updateData.email = req.body.email;
+  if (req.body.Birthday) updateData.Birthday = req.body.Birthday;
+
+  // If no fields to update, return an error
+  if (Object.keys(updateData).length === 0) {
+    return res.status(400).send('No fields to update');
   }
   
   await Users.findOneAndUpdate(
