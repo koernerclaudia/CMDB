@@ -127,6 +127,7 @@ async (req, res) => {
 
   let updateData = {
     username: req.body.username,
+    password: req.body.password,
     email: req.body.email,
     Birthday: req.body.Birthday
   };
