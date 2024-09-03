@@ -104,46 +104,30 @@ app.get('/users/:username', passport.authenticate('jwt', { session: false }), as
   }
 });
 
-// Update a user's info, by username (updating username, password, email)
+// Update a user's info, by username (updating username and/or password and/or email)
 
-app.put('/users/:Username',
-  [
-    // Validate the input fields
-    check('username', 'Username is required').isLength({ min: 5 }),
-    check('username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
-    check('password', 'Password is required').optional().not().isEmpty(),
-    check('email', 'Email does not appear to be valid').optional().isEmail(),
-    check('Birthday', 'Birthday does not appear to be valid').optional().isDate()
-  ], async (req, res) => {
+app.put('/users/:username', async (req, res) => {
+  await Users.findOneAndUpdate({ username: req.params.username }, { $set:
+    [
+      check('username', 'Username is required').isLength({ min: 5 }),
+      check(
+      'username',
+      'username contains non alphanumeric characters - not allowed.'
+      ).isAlphanumeric(),
+      check('password', 'Password is required').not().isEmpty(),
+      check('email', 'Email does not appear to be valid').isEmail(),
+      ]
+  },
+  { new: true }) // This line makes sure that the updated document is returned
+  .then((updatedUser) => {
+    res.json(updatedUser);
+  })
+  .catch((err) => {
+    console.error(err);
+    res.status(500).send('Error: ' + err);
+  })
 
-  // check the validation object for errors
-    let errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() });
-    }
-
-    // Hash the password if it's being updated
-    let updatedUser = req.body;
-    if (updatedUser.password) {
-      updatedUser.password = Users.hashPassword(updatedUser.password);
-    }
-
-    await Users.findOneAndUpdate(
-      { username: req.params.username },
-      { $set: updatedUser },
-      { new: true }) // This option returns the updated document
-      .then((updatedUser) => {
-        if (!updatedUser) {
-          return res.status(404).send('Error: No user was found');
-        }
-        res.json(updatedUser);
-      })
-      .catch((error) => {
-        console.error(error);
-        res.status(500).send('Error: ' + error);
-      });
-  });
+});
 
 
 // app.put(
