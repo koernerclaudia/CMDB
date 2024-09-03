@@ -111,16 +111,24 @@ app.put('/users/:username', passport.authenticate('jwt', {session: false}), asyn
   if(req.user.username !==req.params.username){
     return res.status(400).send('Permission denied');
   }
+
+  let updateData = {
+    username: req.body.username,
+    email: req.body.email,
+    Birthday: req.body.Birthday
+  };
+
+  // Only hash the password if it's being updated
+  if (req.body.password) {
+    updateData.password = Users.hashPassword(req.body.password);
+  }
   
-  await Users.findOneAndUpdate({ username: req.params.username }, { $set:
-    {
-      username: req.body.username,
-      password: req.body.password,
-      email: req.body.email,
-      Birthday: req.body.Birthday
-    }
-  },
-  { new: true }) // This line makes sure that the updated document is returned
+  await Users.findOneAndUpdate(
+    { username: req.params.username }, 
+    { $set: updateData },
+    { new: true }
+  
+  ) // This line makes sure that the updated document is returned
   .then((updatedUser) => {
     res.json(updatedUser);
   })
