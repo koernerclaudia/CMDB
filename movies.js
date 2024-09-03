@@ -107,7 +107,7 @@ app.get('/users/:username', passport.authenticate('jwt', { session: false }), as
 // Update a user's info, by username (updating username and/or password and/or email)
 
 app.put('/users/:username', async (req, res) => {
-  await Users.findOneAndUpdate({ Username: req.params.username }, { $set:
+  await Users.findOneAndUpdate({ username: req.params.username }, { $set:
     {
       username: req.body.username,
       password: req.body.password,
