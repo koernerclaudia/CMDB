@@ -46,13 +46,3 @@ module.exports = (router) => {
 }
 
 
-// app.post('/login', (req, res) => {
-//   // ... authentication logic ...
-//   if (user) {
-//     let token = generateJWTToken(user);
-//     return res.json({ user: user, token: token });
-//   } else {
-//     return res.status(400).json({ message: "Incorrect username or password" });
-//   }
-// });
-

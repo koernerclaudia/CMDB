@@ -106,7 +106,14 @@ app.get('/users/:username', passport.authenticate('jwt', { session: false }), as
 
 // Update a user's info, by username (updating username and/or password and/or email)
 
-app.put('/users/:username', passport.authenticate('jwt', {session: false}), async (req, res) => {
+app.put('/users/:username', passport.authenticate('jwt', {session: false}), 
+[
+  check('username', 'Username is required').isLength({min: 5}),
+  check('username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+  check('password', 'Password is required').not().isEmpty(),
+  check('email', 'Email does not appear to be valid').isEmail()
+],
+async (req, res) => {
   
   if(req.user.username !==req.params.username){
     return res.status(400).send('Permission denied');
@@ -139,89 +146,6 @@ app.put('/users/:username', passport.authenticate('jwt', {session: false}), asyn
 
 });
 
-
-// app.put(
-//   '/users/:Username',
-//   passport.authenticate('jwt', { session: false }),
-//   [
-//     check('username', 'Username is required').isLength({ min: 5 }),
-//     check(
-//       'username',
-//       'username contains non alphanumeric characters - not allowed.'
-//     ).isAlphanumeric(),
-//     check('password', 'Password is required').not().isEmpty(),
-//     check('email', 'Email does not appear to be valid').isEmail(),
-//   ],
-//   async (req, res) => {
-//     // check the validation object for errors
-//     let errors = validationResult(req);
-
-//     if (!errors.isEmpty()) {
-//       return res.status(422).json({ errors: errors.array() });
-//     }
-//     // CONDITION TO CHECK ADDED HERE
-//     if (req.user.username !== req.params.username) {
-//       return res.status(400).send('Permission denied');
-//     }
-//     // CONDITION ENDS
-//     let hashedPassword = Users.hashPassword(req.body.password);
-//     await Users.findOneAndUpdate(
-//       { Username: req.params.username },
-//       {
-//         $set: {
-//           username: req.body.username,
-//           password: hashedPassword,
-//           email: req.body.email,
-//           Birthday: req.body.Birthday,
-//         },
-//       },
-//       { new: true }
-//     ) // This line makes sure that the updated document is returned
-//       .then((updatedUser) => {
-//         res.json(updatedUser);
-//       })
-//       .catch((err) => {
-//         console.log(err);
-//         res.status(500).send('Error: ' + err);
-//       });
-//   }
-// );
-
-
-// app.put('/users/:username', passport.authenticate('jwt', { session: false }),
-// [
-//   check('username', 'Username is required').isLength({min: 5}),
-//   check('username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
-//   check('password', 'Password is required').not().isEmpty(),
-//   check('password', 'Password must be at least 8 characters long').isLength({ min: 8 }),
-//   check('email', 'Email does not appear to be valid').isEmail()
-// ],
-
-// async (req, res) => {
-//   // CONDITION TO CHECK ADDED HERE
-//   if(req.user.username !== req.params.username){
-//       return res.status(400).send('Permission denied');
-//   }
-//   // CONDITION ENDS
-//   let hashedPassword = Users.hashPassword(req.body.password);
-//   await Users.findOneAndUpdate({ username: req.params.username }, {
-//       $set:
-//       {
-//           username: req.body.username,
-//           password: hashedPassword,
-//           email: req.body.email,
-//           birthdate: req.body.Birthdate
-//       }
-//   },
-//       { new: true }) // This line makes sure that the updated document is returned
-//       .then((updatedUser) => {
-//           res.json(updatedUser);
-//       })
-//       .catch((err) => {
-//           console.log(err);
-//           res.status(500).send('Error: ' + err);
-//       })
-// });
 
 // Add a movie to a user's list of favorites
 // Useing addtoSet so it is only added once. In case already added,
