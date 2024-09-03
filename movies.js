@@ -106,17 +106,14 @@ app.get('/users/:username', passport.authenticate('jwt', { session: false }), as
 
 // Update a user's info, by username (updating username and/or password and/or email)
 
-app.put('/users/:username', async (req, res) => {
-  await Users.findOneAndUpdate({ username: req.params.username }, { $set:
-    [
-      check('username', 'Username is required').isLength({ min: 5 }),
-      check(
-      'username',
-      'username contains non alphanumeric characters - not allowed.'
-      ).isAlphanumeric(),
-      check('password', 'Password is required').not().isEmpty(),
-      check('email', 'Email does not appear to be valid').isEmail(),
-      ]
+app.put('/users/:Username', async (req, res) => {
+  await Users.findOneAndUpdate({ Username: req.params.Username }, { $set:
+    {
+      Username: req.body.Username,
+      Password: req.body.Password,
+      Email: req.body.Email,
+      Birthday: req.body.Birthday
+    }
   },
   { new: true }) // This line makes sure that the updated document is returned
   .then((updatedUser) => {
@@ -124,7 +121,7 @@ app.put('/users/:username', async (req, res) => {
   })
   .catch((err) => {
     console.error(err);
-    res.status(500).send('Error: ' + err);
+    res.status(500).send('Error: '  + err);
   })
 
 });
