@@ -1,11 +1,21 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
+require('dotenv').config()
 const Models = require('./models.js');
 
 const Movies = Models.Movie;
 const Users = Models.User;
 
+const dbURI = process.env.CONNECTION_URI;
+
+if (!dbURI) {
+  throw new Error('MongoDB URI is not defined');
+}
+mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('MongoDB connection error:', err));
+
 // Connection through Heroku
-mongoose.connect(process.env.CONNECTION_URI);
+// mongoose.connect(process.env.CONNECTION_URI);
 
 const { check, validationResult } = require('express-validator');
 
@@ -13,6 +23,9 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const uuid = require('uuid');
+
+const swaggerJsdoc = require("swagger-jsdoc"),
+  swaggerUi = require("swagger-ui-express");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -27,6 +40,41 @@ let auth = require('./auth')(app);
 
 const passport = require('passport');
 require('./passport');
+
+
+const options = {
+  definition: {
+    openapi: "3.1.0",
+    info: {
+      title: "LogRocket Express API with Swagger",
+      version: "0.1.0",
+      description:
+        "This is a simple CRUD API application made with Express and documented with Swagger",
+      license: {
+        name: "MIT",
+        url: "https://spdx.org/licenses/MIT.html",
+      },
+      contact: {
+        name: "LogRocket",
+        url: "https://logrocket.com",
+        email: "info@email.com",
+      },
+    },
+    servers: [
+      {
+        url: "http://localhost:3000",
+      },
+    ],
+  },
+  apis: ["./routes/*.js"],
+};
+
+const specs = swaggerJsdoc(options);
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(specs)
+);
 
 // USER BASED ACTIONS
 
