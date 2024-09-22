@@ -24,14 +24,46 @@ const app = express();
 const bodyParser = require('body-parser');
 const uuid = require('uuid');
 
-const swaggerJsdoc = require("swagger-jsdoc"),
-  swaggerUi = require("swagger-ui-express");
+const swaggerJsdoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
+
+
+const options = {
+  definition: {
+    openapi: "3.1.0",
+    info: {
+      title: "Movie Database - Rest API",
+      version: "0.1.0",
+      description:
+        "This is a simple REST API application made with Express & MongoDB; documented with Swagger",
+      license: {
+        name: "MIT",
+        url: "https://spdx.org/licenses/MIT.html",
+      },
+    },
+    servers: [
+      {
+        url: "http://localhost:8080/",
+      },
+    ],
+  },
+  apis: ["./swagger.yaml"],
+};
+
+const swaggerSpec = swaggerJsdoc(options)
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, {
+  explorer: true,
+})
+);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const cors = require('cors');
-let allowedOrigins = ['http://localhost:8088', 'http://testsite.com','http://localhost:8088', 'https://cmdb2024.netlify.app'];
+let allowedOrigins = ['http://localhost:8088', 'http://testsite.com','http://localhost:8088', 'https://cmdb2024.netlify.app', 'http://localhost:4000'];
 
 // Allow access from all origins.
 app.use(cors());
@@ -42,39 +74,6 @@ const passport = require('passport');
 require('./passport');
 
 
-const options = {
-  definition: {
-    openapi: "3.1.0",
-    info: {
-      title: "LogRocket Express API with Swagger",
-      version: "0.1.0",
-      description:
-        "This is a simple CRUD API application made with Express and documented with Swagger",
-      license: {
-        name: "MIT",
-        url: "https://spdx.org/licenses/MIT.html",
-      },
-      contact: {
-        name: "LogRocket",
-        url: "https://logrocket.com",
-        email: "info@email.com",
-      },
-    },
-    servers: [
-      {
-        url: "http://localhost:3000",
-      },
-    ],
-  },
-  apis: ["./routes/*.js"],
-};
-
-const specs = swaggerJsdoc(options);
-app.use(
-  "/api-docs",
-  swaggerUi.serve,
-  swaggerUi.setup(specs)
-);
 
 // USER BASED ACTIONS
 
@@ -121,6 +120,8 @@ app.post('/users',
         res.status(500).send('Error: ' + error);
       });
   });
+
+
 
 // Get all users
 app.get('/users', passport.authenticate('jwt', { session: false }), async (req, res) => {
@@ -202,6 +203,7 @@ async (req, res) => {
 });
 
 
+
 // Add a movie to a user's list of favorites
 // Useing addtoSet so it is only added once. In case already added,
 // there will not be a message.
@@ -254,7 +256,7 @@ app.delete('/users/:username', passport.authenticate('jwt', { session: false }),
 
   // ACTIONS WITH MOVIE DATABASE
 
-  // Return a list of ALL movies to the user, list movies by genre, list movies by actor
+  // Return a list of ALL movies to the user
 
   app.get('/movies', passport.authenticate('jwt', { session: false }), async (req, res) => {
     const genreType = req.query.genre; // Retrieve the genre from query parameters
