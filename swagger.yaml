@@ -490,5 +490,5 @@ paths:
 #       '401':
 #         description: Unauthorized - Missing or invalid JWT token
 #       '500':
-#         description: Internal server error
+#         description:  server error
 
