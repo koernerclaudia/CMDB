@@ -35,7 +35,7 @@ const options = {
       title: "Movie Database - Rest API",
       version: "0.1.0",
       description:
-        "This is a simple REST API application made with Express & MongoDB; documented with Swagger",
+        "This is a simple REST API application made with Express & MongoDB. Check out the app [here](https://cmdb2024.netlify.app).",
       license: {
         name: "MIT",
         url: "https://spdx.org/licenses/MIT.html",
