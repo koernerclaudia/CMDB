@@ -65,10 +65,10 @@ let allowedOrigins = ['http://localhost:8088', 'http://testsite.com', 'https://c
 
 app.use(cors());
 
-let auth = require('./auth')(app);
+let auth = require('./auth.js')(app);
 
 const passport = require('passport');
-require('./passport');
+require('./passport.js');
 
 /**
  * @module UserRoutes

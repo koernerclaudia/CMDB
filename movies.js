@@ -63,10 +63,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const cors = require('cors');
-let allowedOrigins = ['http://localhost:8088', 'http://testsite.com','http://localhost:8088', 'https://cmdb2024.netlify.app', 'http://localhost:4000'];
+let allowedOrigins = ['http://localhost:8088', 'http://testsite.com','http://localhost:8088', 'https://cmdb2024.netlify.app', 'http://localhost:4000', 'http://localhost:4000]', 'https://cmdb-ang.netlify.app']
 
 // Allow access from all origins.
-app.use(cors());
+app.use(cors({
+  origin: 'http://your-angular-app-url.com', // Allow your Angular app's origin
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow these methods
+  credentials: true // Allow credentials if needed
+}));
 
 let auth = require('./auth')(app);
 
