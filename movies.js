@@ -66,6 +66,7 @@ const cors = require('cors');
 let allowedOrigins = ['http://localhost:8088', 'http://testsite.com','http://localhost:8088', 'https://cmdb2024.netlify.app', 'http://localhost:4000'];
 
 // Allow access from all origins.
+
 app.use(cors());
 
 let auth = require('./auth')(app);
@@ -78,6 +79,7 @@ require('./passport');
 // USER BASED ACTIONS
 
 //Add a user
+
 app.post('/users',
   [
     check('username', 'Username is required').isLength({min: 5}).withMessage('Username must be at least 5 characters long.'),
