@@ -1,4 +1,7 @@
-
+/**
+ * This module sets up a server for a movie database API using Express.js and MongoDB.
+ * It includes user management, movie information, and CORS settings.
+ */
 
 const mongoose = require('mongoose');
 require('dotenv').config();
@@ -13,12 +16,17 @@ if (!dbURI) {
   throw new Error('MongoDB URI is not defined');
 }
 
-
+/**
+ * Connects to the MongoDB database using the connection URI from environment variables.
+ */
 
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('MongoDB connection error:', err));
 
+/**
+ * Express-validator for validating user input.
+ */
 const { check, validationResult } = require('express-validator');
 const express = require('express');
 const app = express();
@@ -28,6 +36,9 @@ const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 
 
+/**
+ * Swagger configuration options for API documentation.
+ */
 const options = {
   definition: {
     openapi: "3.1.0",
@@ -51,7 +62,9 @@ const options = {
 
 const swaggerSpec = swaggerJsdoc(options);
 
-
+/**
+ * Serves the Swagger API documentation at the /api-docs endpoint.
+ */
 
 app.use(
   "/api-docs",
@@ -67,7 +80,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const cors = require('cors');
 let allowedOrigins = ['http://localhost:8088', 'http://testsite.com', 'https://cmdb2024.netlify.app', 'http://localhost:4000'];
 
-
+/**
+ * Sets up CORS (Cross-Origin Resource Sharing) to allow requests from specific origins.
+ */
 
 app.use(
 cors({
@@ -82,7 +97,15 @@ let auth = require('./auth.js')(app);
 const passport = require('passport');
 require('./passport.js');
 
-
+/**
+ * Endpoint to add a new user.
+ * 
+ * @param {string} username - User's username.
+ * @param {string} password - User's password.
+ * @param {string} email - User's email.
+ * @param {Date} [Birthdate] - User's birthdate.
+ * @returns {object} - The created user object.
+ */
 app.post('/users', [
   check('username', 'Username is required').isLength({ min: 5 }),
   check('username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
@@ -119,7 +142,11 @@ app.post('/users', [
     });
 });
 
-
+/**
+ * @function GetUsers
+ * @description Get a list of all users.
+ * @route GET /users
+ */
 app.get('/users', passport.authenticate('jwt', { session: false }), async (req, res) => {
   await Users.find()
     .then((users) => {
@@ -131,7 +158,11 @@ app.get('/users', passport.authenticate('jwt', { session: false }), async (req, 
     });
 });
 
-
+/**
+ * @function GetUserByUsername
+ * @description Get a user by username.
+ * @route GET /users/:username
+ */
 app.get('/users/:username', passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     const user = await Users.findOne({ username: req.params.username });
@@ -145,7 +176,11 @@ app.get('/users/:username', passport.authenticate('jwt', { session: false }), as
   }
 });
 
-
+/**
+ * @function UpdateUser
+ * @description Update a user's info by username.
+ * @route PUT /users/:username
+ */
 app.put('/users/:username', passport.authenticate('jwt', { session: false }), [
   check('username').optional().isLength({ min: 5 }),
   check('username', 'Username contains non alphanumeric characters - not allowed.').optional().isAlphanumeric(),
@@ -182,7 +217,11 @@ app.put('/users/:username', passport.authenticate('jwt', { session: false }), [
   });
 });
 
-
+/**
+ * @function AddFavoriteMovie
+ * @description Add a movie to a user's list of favorites.
+ * @route POST /users/:username/movies/:MovieID
+ */
 app.post('/users/:username/movies/:MovieID', passport.authenticate('jwt', { session: false }), async (req, res) => {
   await Users.findOneAndUpdate({ username: req.params.username }, {
     $addToSet: { FavoriteMovies: req.params.MovieID }
@@ -197,7 +236,11 @@ app.post('/users/:username/movies/:MovieID', passport.authenticate('jwt', { sess
   });
 });
 
-
+/**
+ * @function RemoveFavoriteMovie
+ * @description Remove a movie from a user's list of favorites.
+ * @route DELETE /users/:username/movies/:MovieID
+ */
 app.delete('/users/:username/movies/:MovieID', passport.authenticate('jwt', { session: false }), async (req, res) => {
   await Users.findOneAndUpdate({ username: req.params.username }, {
     $pull: { FavoriteMovies: req.params.MovieID }
@@ -212,8 +255,13 @@ app.delete('/users/:username/movies/:MovieID', passport.authenticate('jwt', { se
   });
 });
 
-
-
+/**
+ * Endpoint to delete a movie from a user's list of favorites.
+ * 
+ * @param {string} username - User's username.
+ * @param {string} MovieID - The ID of the movie to remove from favorites.
+ * @returns {object} - The updated user object with the favorite movie removed.
+ */
 app.delete('/users/:username', passport.authenticate('jwt', { session: false }), async (req, res) => {
   await Users.findOneAndDelete({ username: req.params.username })
     .then((user) => {
@@ -229,7 +277,12 @@ app.delete('/users/:username', passport.authenticate('jwt', { session: false }),
     });
 });
 
-
+/**
+ * Endpoint to delete a user by username.
+ * 
+ * @param {string} username - User's username.
+ * @returns {string} - Success or failure message.
+ */
 app.get('/movies', passport.authenticate('jwt', { session: false }), async (req, res) => {
   const genreType = req.query.genre;
   const actorName = req.query.actor;
@@ -257,7 +310,11 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), async (req,
   }
 });
 
-
+/**
+ * @function GetMovieByTitle
+ * @description Get a specific movie by title and list its information.
+ * @route GET /movies/:Title
+ */
 app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     const movie = await Movies.findOne({ Title: req.params.Title });
@@ -271,7 +328,11 @@ app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), asyn
   }
 });
 
-
+/**
+ * @function GetGenre
+ * @description Return data about a genre and its information.
+ * @route GET /movies/genres/:genreType
+ */
 app.get('/movies/genres/:genreType', passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     const genreType = req.params.genreType;
@@ -287,7 +348,11 @@ app.get('/movies/genres/:genreType', passport.authenticate('jwt', { session: fal
   }
 });
 
-
+/**
+ * @function GetDirector
+ * @description Return data about a director and their information.
+ * @route GET /movies/directors/:directorName
+ */
 app.get('/movies/directors/:directorName', passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     const directorName = req.params.directorName;
@@ -304,10 +369,17 @@ app.get('/movies/directors/:directorName', passport.authenticate('jwt', { sessio
 });
 
 
+// Additional endpoints for movie actions...
 
+/**
+ * Serves static files from the 'public' directory.
+ */
 app.use(express.static('public'));
 
-
+/**
+ * @function Listen
+ * @description Start the Express server and listen for requests.
+ */
 const port = process.env.PORT || 8080;
 app.listen(port, '0.0.0.0', () => {
   console.log('Listening on Port ' + port);
