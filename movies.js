@@ -1,6 +1,8 @@
 /**
- * Required dependencies and configurations.
+ * This module sets up a server for a movie database API using Express.js and MongoDB.
+ * It includes user management, movie information, and CORS settings.
  */
+
 const mongoose = require('mongoose');
 require('dotenv').config();
 const Models = require('./models.js');
@@ -14,11 +16,17 @@ if (!dbURI) {
   throw new Error('MongoDB URI is not defined');
 }
 
+/**
+ * Connects to the MongoDB database using the connection URI from environment variables.
+ */
+
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-// Import necessary modules for validation and Express
+/**
+ * Express-validator for validating user input.
+ */
 const { check, validationResult } = require('express-validator');
 const express = require('express');
 const app = express();
@@ -27,6 +35,10 @@ const uuid = require('uuid');
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 
+
+/**
+ * Swagger configuration options for API documentation.
+ */
 const options = {
   definition: {
     openapi: "3.1.0",
@@ -49,6 +61,11 @@ const options = {
 };
 
 const swaggerSpec = swaggerJsdoc(options);
+
+/**
+ * Serves the Swagger API documentation at the /api-docs endpoint.
+ */
+
 app.use(
   "/api-docs",
   swaggerUi.serve,
@@ -63,7 +80,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const cors = require('cors');
 let allowedOrigins = ['http://localhost:8088', 'http://testsite.com', 'https://cmdb2024.netlify.app', 'http://localhost:4000'];
 
-app.use(cors());
+/**
+ * Sets up CORS (Cross-Origin Resource Sharing) to allow requests from specific origins.
+ */
+
+app.use(
+cors({
+  origin: 'http://your-angular-app-url.com',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true,
+})
+);
 
 let auth = require('./auth.js')(app);
 
@@ -71,14 +98,13 @@ const passport = require('passport');
 require('./passport.js');
 
 /**
- * @module UserRoutes
- * User-based API endpoints.
- */
-
-/**
- * @function CreateUser
- * @description Add a new user.
- * @route POST /users
+ * Endpoint to add a new user.
+ * 
+ * @param {string} username - User's username.
+ * @param {string} password - User's password.
+ * @param {string} email - User's email.
+ * @param {Date} [Birthdate] - User's birthdate.
+ * @returns {object} - The created user object.
  */
 app.post('/users', [
   check('username', 'Username is required').isLength({ min: 5 }),
@@ -230,9 +256,11 @@ app.delete('/users/:username/movies/:MovieID', passport.authenticate('jwt', { se
 });
 
 /**
- * @function DeleteUser
- * @description Delete a user by username.
- * @route DELETE /users/:username
+ * Endpoint to delete a movie from a user's list of favorites.
+ * 
+ * @param {string} username - User's username.
+ * @param {string} MovieID - The ID of the movie to remove from favorites.
+ * @returns {object} - The updated user object with the favorite movie removed.
  */
 app.delete('/users/:username', passport.authenticate('jwt', { session: false }), async (req, res) => {
   await Users.findOneAndDelete({ username: req.params.username })
@@ -250,14 +278,10 @@ app.delete('/users/:username', passport.authenticate('jwt', { session: false }),
 });
 
 /**
- * @module MovieRoutes
- * Movie-based API endpoints.
- */
-
-/**
- * @function GetMovies
- * @description Return a list of all movies, with optional filtering by genre or actor.
- * @route GET /movies
+ * Endpoint to delete a user by username.
+ * 
+ * @param {string} username - User's username.
+ * @returns {string} - Success or failure message.
  */
 app.get('/movies', passport.authenticate('jwt', { session: false }), async (req, res) => {
   const genreType = req.query.genre;
@@ -344,6 +368,12 @@ app.get('/movies/directors/:directorName', passport.authenticate('jwt', { sessio
   }
 });
 
+
+// Additional endpoints for movie actions...
+
+/**
+ * Serves static files from the 'public' directory.
+ */
 app.use(express.static('public'));
 
 /**

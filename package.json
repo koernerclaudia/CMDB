@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node movies.js",
     "dev": "nodemon movies.js",
-    "jsdoc": "npm run jsdoc"
+    "jsdoc": "npm run jsdoc",
+    "doc": "jsdoc -c jsdoc.json"
   },
   "keywords": [],
   "author": "",
