@@ -1,7 +1,9 @@
 # cMDb (Claudia's Movie Database)
 
-WIP - API documentation on Swagger, currently can be seen here: 
-https://cmdb-b8f3cd58963f.herokuapp.com/documentation.html
+This is the backend of 2 of these 2 Frontend Projects:
+
+MovieDatabase - built with Angular: https://github.com/koernerclaudia/MovieDatabase-ANG
+MovieDatabase - built with React: https://github.com/koernerclaudia/CMDB-Live
 
 ## Purpose
 
@@ -15,7 +17,7 @@ This project consists of 2 parts:
 
 PART1 = Backend built with MongoDB, Express & Node.js.
 
-PART2 = Frontend built with React - [Check it out here](https://github.com/koernerclaudia/CMDB-Live)
+PART2 = Frontend built with React / Angular 
 
 ## Built & Technologies
 
@@ -65,6 +67,21 @@ WIP - https://cmdb-b8f3cd58963f.herokuapp.com/documentation.html
 - (WIP: Swagger for API Documentation)
 
 
-## Status of the API
+## API Documentation
 
-Info on how to use the API will be shared soon.
+Available on Swagger: https://cmdb-b8f3cd58963f.herokuapp.com/api-docs/
+
+
+## Deployment
+
+To check out this app
+
+1) Fork the repository or download a Zip file form the main branch and extract.
+
+2) Make sure you have Node and Express installed.
+
+3) Run `npm install` to setup all other necessary dependencies. 
+
+4) Run `node movies.js` to run the project - it should be hosted on http://localhost8080.
+
+5) To check on the API endpoints and play around with it, use a service like Postman (https://www.postman.com/) Checkout the API documentation for all available endpoints. Endpoints are setup within the movies.js file.
